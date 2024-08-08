@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"log/slog"
 	"os"
 
@@ -19,41 +17,22 @@ func main() {
 	flag.Parse()
 
 	folderInputPath := fmt.Sprintf("%s/%s", *inputPath, *competitionID)
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	files, err := os.ReadDir(folderInputPath)
+	competition, err := judobase.ParseCompetition(folderInputPath, logger)
 	if err != nil {
-		slog.Error("failed to read folder", "err", err, "folder", folderInputPath)
+		logger.Error("failed to parse competition", "err", err)
 		return
 	}
 
-	for _, f := range files {
-		filename := fmt.Sprintf("%s/%s", folderInputPath, f.Name())
-		jsonFile, err := os.Open(filename)
-		if err != nil {
-			slog.Error("failed to open file", "err", err, "file", filename)
-			return
-		}
-		defer jsonFile.Close()
-		byteValue, err := io.ReadAll(jsonFile)
-		if err != nil {
-			slog.Error("failed to read file", "err", err, "file", filename)
-			return
-		}
-
-		var judobaseComp judobase.Competition
-		err = json.Unmarshal(byteValue, &judobaseComp)
-		if err != nil {
-			slog.Error("failed to unmarshal file", "err", err, "file", filename)
-			return
-		}
-
-		winRecords := analyser.ParseWinRecords(judobaseComp)
+	for _, category := range competition.Categories {
+		winRecords := analyser.ParseWinRecords(category.Contests)
 		winByTypes := analyser.GroupByWinType(winRecords)
 		winByGolden := analyser.GroupByGoldenScore(winRecords)
 
 		fmt.Println("====================================")
-		fmt.Printf("Competition: %s\n", *competitionID)
-		fmt.Printf("Category: %s\n", f.Name())
+		fmt.Printf("Competition: %s\n", competition.Name)
+		fmt.Printf("Category: %s\n", category.Name)
 		fmt.Printf("# fights: %d\n", len(winRecords))
 		fmt.Println("====================================")
 		fmt.Printf("# wins by ippon: %d %s\n", winByTypes[analyser.WinByIppon], formatPercentage(winByTypes[analyser.WinByIppon], len(winRecords)))

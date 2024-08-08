@@ -76,6 +76,12 @@ type Contest struct {
 	PersonalPictureBlue   *string `json:"personal_picture_blue"`
 }
 
-type Competition struct {
+type Category struct {
+	Name     string
 	Contests []Contest `json:"contests"`
+}
+
+type Competition struct {
+	Name       string
+	Categories []Category
 }

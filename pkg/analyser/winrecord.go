@@ -18,9 +18,9 @@ func parseGoldenScore(contest judobase.Contest) bool {
 	return contest.GoldenScore != nil && *contest.GoldenScore == "1"
 }
 
-func ParseWinRecords(competition judobase.Competition) []WinRecord {
+func ParseWinRecords(contests []judobase.Contest) []WinRecord {
 	winRecords := []WinRecord{}
-	for _, contest := range competition.Contests {
+	for _, contest := range contests {
 		winRecords = append(winRecords, newWinRecord(contest))
 	}
 
