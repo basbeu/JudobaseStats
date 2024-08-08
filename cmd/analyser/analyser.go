@@ -8,9 +8,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/basbeu/JudobaseStats/judobase"
-	"github.com/basbeu/JudobaseStats/report"
-	"github.com/basbeu/JudobaseStats/stats"
+	"github.com/basbeu/JudobaseStats/internal/judobase"
+	"github.com/basbeu/JudobaseStats/pkg/analyser"
 )
 
 func main() {
@@ -36,17 +35,17 @@ func main() {
 		return
 	}
 
-	winRecords := stats.ParseWinRecords(judobaseComp)
-	winByTypes := report.GroupByWinType(winRecords)
-	winByGolden := report.GroupByGoldenScore(winRecords)
+	winRecords := analyser.ParseWinRecords(judobaseComp)
+	winByTypes := analyser.GroupByWinType(winRecords)
+	winByGolden := analyser.GroupByGoldenScore(winRecords)
 
 	fmt.Println("====================================")
 	fmt.Printf("# of fights: %d\n", len(winRecords))
 	fmt.Println("====================================")
-	fmt.Printf("Wins by ippon: %d %s\n", winByTypes[stats.WinByIppon], formatPercentage(winByTypes[stats.WinByIppon], len(winRecords)))
-	fmt.Printf("Wins by waza-ari: %d %s\n", winByTypes[stats.WinByWaza], formatPercentage(winByTypes[stats.WinByWaza], len(winRecords)))
-	fmt.Printf("Wins by 3 shidos: %d %s\n", winByTypes[stats.WinByShido], formatPercentage(winByTypes[stats.WinByShido], len(winRecords)))
-	fmt.Printf("Wins by direct hansoku-make: %d %s\n", winByTypes[stats.WinByHansokuMake], formatPercentage(winByTypes[stats.WinByHansokuMake], len(winRecords)))
+	fmt.Printf("Wins by ippon: %d %s\n", winByTypes[analyser.WinByIppon], formatPercentage(winByTypes[analyser.WinByIppon], len(winRecords)))
+	fmt.Printf("Wins by waza-ari: %d %s\n", winByTypes[analyser.WinByWaza], formatPercentage(winByTypes[analyser.WinByWaza], len(winRecords)))
+	fmt.Printf("Wins by 3 shidos: %d %s\n", winByTypes[analyser.WinByShido], formatPercentage(winByTypes[analyser.WinByShido], len(winRecords)))
+	fmt.Printf("Wins by direct hansoku-make: %d %s\n", winByTypes[analyser.WinByHansokuMake], formatPercentage(winByTypes[analyser.WinByHansokuMake], len(winRecords)))
 	fmt.Println("====================================")
 	fmt.Printf("Wins in regular time: %d %s\n", winByGolden[false], formatPercentage(winByGolden[false], len(winRecords)))
 	fmt.Printf("Wins in Golden Score: %d %s\n", winByGolden[true], formatPercentage(winByGolden[true], len(winRecords)))

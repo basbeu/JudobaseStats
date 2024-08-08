@@ -1,6 +1,6 @@
-package stats
+package analyser
 
-import "github.com/basbeu/JudobaseStats/judobase"
+import "github.com/basbeu/JudobaseStats/internal/judobase"
 
 type WinType int
 
