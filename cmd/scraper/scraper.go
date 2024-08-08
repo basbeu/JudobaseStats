@@ -27,7 +27,7 @@ func main() {
 	scraperClient := scraper.NewScraperClient(*competitionID, logger)
 
 	for _, category := range scraper.Categories {
-		categoryBytes, err := scraperClient.ScrapeCategory(scraper.U60)
+		categoryBytes, err := scraperClient.ScrapeCategory(category)
 		if err != nil {
 			logger.Error("failed to scrape", "err", err)
 			return
