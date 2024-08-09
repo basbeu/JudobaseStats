@@ -35,6 +35,10 @@ The second tool is an analyser. It can be used to analyse the scraped data.
 
 As the scraper, the default values allow to analyse the `Olympic Games Paris 2024`. The flags allow to set to the desired values.
 
+There are several output modes:
+- stdout: print the analysis to the standard output (default value)
+- txt: print the analysis to txt files. The location of the file is controled with the `output` flag.
+
 ### Usage :
 ```
 $ go run analyser.go -h
@@ -43,4 +47,8 @@ Usage of analyser.exe:
         competition ID in judobase.ijf.org (default "2653")
   -input string
         path of the input folder (default "../../data")
+  -outMode string
+        output mode (default "stdout")
+  -output string
+        path of the output folder (default "../../analysis")
 ```
