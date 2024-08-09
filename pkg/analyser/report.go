@@ -17,8 +17,8 @@ func DisplayCategoryStats(competitionName string, categoryName string, winRecord
 
 func displayRoundStats(round string, winRecords []WinRecord) {
 	if len(winRecords) > 0 {
-		winByTypes := groupByWinType(winRecords)
-		winByGolden := groupByGoldenScore(winRecords)
+		winByTypes := groupByWinType(winRecords).count()
+		winByGolden := groupByGoldenScore(winRecords).count()
 		fmt.Println("======== " + round + " ================")
 		fmt.Printf("# fights: %d\n", len(winRecords))
 		fmt.Printf("# wins by ippon: %d %s\n", winByTypes[WinByIppon], formatPercentage(winByTypes[WinByIppon], len(winRecords)))
@@ -30,50 +30,6 @@ func displayRoundStats(round string, winRecords []WinRecord) {
 		fmt.Printf("# wins in Golden Score: %d %s\n", winByGolden[true], formatPercentage(winByGolden[true], len(winRecords)))
 		fmt.Println("====================================")
 	}
-}
-
-func groupByWinType(winRecords []WinRecord) map[WinType]int {
-	winByTypes := map[WinType]int{
-		WinByIppon:       0,
-		WinByWaza:        0,
-		WinByShido:       0,
-		WinByHansokuMake: 0,
-		WinUnknown:       0,
-	}
-	for _, r := range winRecords {
-		winByTypes[r.Type]++
-	}
-	return winByTypes
-}
-
-func groupByGoldenScore(winRecords []WinRecord) map[bool]int {
-	winByGolden := map[bool]int{
-		true:  0,
-		false: 0,
-	}
-	for _, r := range winRecords {
-		winByGolden[r.GoldenScore]++
-	}
-
-	return winByGolden
-}
-
-func groupByRound(winRecords []WinRecord) map[Round][]WinRecord {
-	winRecordByRound := map[Round][]WinRecord{
-		Round64:      {},
-		Round32:      {},
-		Round16:      {},
-		QuarterFinal: {},
-		SemiFinal:    {},
-		Repechage:    {},
-		Bronze:       {},
-		Final:        {},
-		Unknown:      {},
-	}
-	for _, r := range winRecords {
-		winRecordByRound[r.Round] = append(winRecordByRound[r.Round], r)
-	}
-	return winRecordByRound
 }
 
 func formatPercentage(part int, total int) string {
