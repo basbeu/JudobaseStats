@@ -37,7 +37,7 @@ As the scraper, the default values allow to analyse the `Olympic Games Paris 202
 
 There are several output modes:
 - stdout: print the analysis to the standard output (default value)
-- txt: print the analysis to txt files. The location of the file is controled with the `output` flag.
+- txt: print the analysis to txt files. The location of the files is controled with the `output` flag.
 
 ### Usage :
 ```
