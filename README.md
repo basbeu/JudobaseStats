@@ -3,7 +3,7 @@
 JudobaseStats is a set of tool to allow judo fans to generate their own judo statistics. 
 
 ## Prerequisites
-Have a valid Go installation. This was tested with go 1.22.6.
+Have a valid Go installation. It was tested with go 1.22.6.
 
 ## Scraper
 The first tool is a lightweight scraper that allows to download the results of competition easily.

@@ -28,8 +28,8 @@ func main() {
 	overallWinRecords := []analyser.WinRecord{}
 	for _, category := range competition.Categories {
 		winRecords := analyser.ParseWinRecords(category.Contests)
-		analyser.DisplayWinRecords(competition.Name, category.Name, winRecords)
+		analyser.DisplayCategoryStats(competition.Name, category.Name, winRecords)
 		overallWinRecords = append(overallWinRecords, winRecords...)
 	}
-	analyser.DisplayWinRecords(competition.Name, "all", overallWinRecords)
+	analyser.DisplayCategoryStats(competition.Name, "all", overallWinRecords)
 }
