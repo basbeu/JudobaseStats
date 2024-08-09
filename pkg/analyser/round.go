@@ -2,73 +2,73 @@ package analyser
 
 import "github.com/basbeu/JudobaseStats/internal/judobase"
 
-type Round int
+type round int
 
 const (
-	Round64 Round = iota
-	Round32
-	Round16
-	QuarterFinal
-	SemiFinal
-	Repechage
-	Bronze
-	Final
-	Unknown
+	round64 round = iota
+	round32
+	round16
+	quarterFinal
+	semiFinal
+	repechage
+	bronze
+	final
+	unknown
 )
 
-var Rounds []Round
+var rounds []round
 
 func init() {
-	Rounds = []Round{
-		Round64, Round32, Round16, QuarterFinal, SemiFinal, Repechage, Bronze, Final,
+	rounds = []round{
+		round64, round32, round16, quarterFinal, semiFinal, repechage, bronze, final,
 	}
 }
 
-func (r Round) String() string {
+func (r round) string() string {
 	switch r {
-	case Round64:
+	case round64:
 		return "Round of 64"
-	case Round32:
+	case round32:
 		return "Round of 32"
-	case Round16:
+	case round16:
 		return "Round of 16"
-	case QuarterFinal:
+	case quarterFinal:
 		return "Quarter-Final"
-	case SemiFinal:
+	case semiFinal:
 		return "Semi-Final"
-	case Repechage:
+	case repechage:
 		return "Repechage"
-	case Bronze:
+	case bronze:
 		return "Bronze"
-	case Final:
+	case final:
 		return "Final"
 	default:
 		return "Unknown"
 	}
 }
 
-func parseRound(contest judobase.Contest) Round {
+func parseRound(contest judobase.Contest) round {
 	if contest.RoundName != nil {
 		switch *contest.RoundName {
 		case "Round of 64":
-			return Round64
+			return round64
 		case "Round of 32":
-			return Round32
+			return round32
 		case "Round of 16":
-			return Round16
+			return round16
 		case "Quarter-Final":
-			return QuarterFinal
+			return quarterFinal
 		case "Semi-Final":
-			return SemiFinal
+			return semiFinal
 		case "Repechage":
-			return Repechage
+			return repechage
 		case "Bronze":
-			return Bronze
+			return bronze
 		case "Final":
-			return Final
+			return final
 		default:
-			return Unknown
+			return unknown
 		}
 	}
-	return Unknown
+	return unknown
 }

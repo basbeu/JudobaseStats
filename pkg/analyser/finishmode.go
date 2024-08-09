@@ -2,20 +2,20 @@ package analyser
 
 import "github.com/basbeu/JudobaseStats/internal/judobase"
 
-type FinishMode bool
+type finishMode bool
 
 const (
-	goldenScore FinishMode = true
-	regularTime FinishMode = false
+	goldenScore finishMode = true
+	regularTime finishMode = false
 )
 
-func (g FinishMode) String() string {
+func (g finishMode) string() string {
 	if g {
 		return "Golden score"
 	}
 	return "Regular time"
 }
 
-func parseFinishMode(contest judobase.Contest) FinishMode {
+func parseFinishMode(contest judobase.Contest) finishMode {
 	return contest.GoldenScore != nil && *contest.GoldenScore == "1"
 }

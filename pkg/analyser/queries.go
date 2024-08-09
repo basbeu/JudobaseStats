@@ -1,7 +1,7 @@
 package analyser
 
 type groupingKey interface {
-	String() string
+	string() string
 }
 
 type groupByResult map[groupingKey][]WinRecord
@@ -17,14 +17,14 @@ func (g groupByResult) count() map[groupingKey]int {
 
 func groupByWinType(winRecords []WinRecord) groupByResult {
 	winRecordByType := groupByResult{
-		WinByIppon:       {},
-		WinByWaza:        {},
-		WinByShido:       {},
-		WinByHansokuMake: {},
-		WinUnknown:       {},
+		winByIppon:       {},
+		winByWaza:        {},
+		winByShido:       {},
+		winByHansokuMake: {},
+		winUnknown:       {},
 	}
 	for _, r := range winRecords {
-		winRecordByType[r.Type] = append(winRecordByType[r.Type], r)
+		winRecordByType[r.winType] = append(winRecordByType[r.winType], r)
 	}
 	return winRecordByType
 }
@@ -35,7 +35,7 @@ func groupByFinishMode(winRecords []WinRecord) groupByResult {
 		regularTime: {},
 	}
 	for _, r := range winRecords {
-		winByFinishMode[r.FinishMode] = append(winByFinishMode[r.FinishMode], r)
+		winByFinishMode[r.finishMode] = append(winByFinishMode[r.finishMode], r)
 	}
 
 	return winByFinishMode
@@ -43,18 +43,18 @@ func groupByFinishMode(winRecords []WinRecord) groupByResult {
 
 func groupByRound(winRecords []WinRecord) groupByResult {
 	winRecordByRound := groupByResult{
-		Round64:      {},
-		Round32:      {},
-		Round16:      {},
-		QuarterFinal: {},
-		SemiFinal:    {},
-		Repechage:    {},
-		Bronze:       {},
-		Final:        {},
-		Unknown:      {},
+		round64:      {},
+		round32:      {},
+		round16:      {},
+		quarterFinal: {},
+		semiFinal:    {},
+		repechage:    {},
+		bronze:       {},
+		final:        {},
+		unknown:      {},
 	}
 	for _, r := range winRecords {
-		winRecordByRound[r.Round] = append(winRecordByRound[r.Round], r)
+		winRecordByRound[r.round] = append(winRecordByRound[r.round], r)
 	}
 	return winRecordByRound
 }
