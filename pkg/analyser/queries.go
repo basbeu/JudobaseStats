@@ -1,19 +1,22 @@
 package analyser
 
-type groupByWinResult map[WinType][]WinRecord
-
-func (g groupByWinResult) count() map[WinType]int {
-	return map[WinType]int{
-		WinByIppon:       len(g[WinByIppon]),
-		WinByWaza:        len(g[WinByWaza]),
-		WinByShido:       len(g[WinByShido]),
-		WinByHansokuMake: len(g[WinByHansokuMake]),
-		WinUnknown:       len(g[WinUnknown]),
-	}
+type groupingKey interface {
+	String() string
 }
 
-func groupByWinType(winRecords []WinRecord) groupByWinResult {
-	winRecordByType := groupByWinResult{
+type groupByResult map[groupingKey][]WinRecord
+
+func (g groupByResult) count() map[groupingKey]int {
+	res := map[groupingKey]int{}
+
+	for key, winRecords := range g {
+		res[key] = len(winRecords)
+	}
+	return res
+}
+
+func groupByWinType(winRecords []WinRecord) groupByResult {
+	winRecordByType := groupByResult{
 		WinByIppon:       {},
 		WinByWaza:        {},
 		WinByShido:       {},
@@ -26,31 +29,20 @@ func groupByWinType(winRecords []WinRecord) groupByWinResult {
 	return winRecordByType
 }
 
-type groupByGoldenScoreResult map[bool][]WinRecord
-
-func (g groupByGoldenScoreResult) count() map[bool]int {
-	return map[bool]int{
-		true:  len(g[true]),
-		false: len(g[false]),
-	}
-}
-
-func groupByGoldenScore(winRecords []WinRecord) groupByGoldenScoreResult {
-	winByGolden := groupByGoldenScoreResult{
-		true:  {},
-		false: {},
+func groupByFinishMode(winRecords []WinRecord) groupByResult {
+	winByFinishMode := groupByResult{
+		goldenScore: {},
+		regularTime: {},
 	}
 	for _, r := range winRecords {
-		winByGolden[r.GoldenScore] = append(winByGolden[r.GoldenScore], r)
+		winByFinishMode[r.FinishMode] = append(winByFinishMode[r.FinishMode], r)
 	}
 
-	return winByGolden
+	return winByFinishMode
 }
 
-type groupByRoundResult map[Round][]WinRecord
-
-func groupByRound(winRecords []WinRecord) groupByRoundResult {
-	winRecordByRound := groupByRoundResult{
+func groupByRound(winRecords []WinRecord) groupByResult {
+	winRecordByRound := groupByResult{
 		Round64:      {},
 		Round32:      {},
 		Round16:      {},

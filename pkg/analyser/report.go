@@ -18,7 +18,7 @@ func DisplayCategoryStats(competitionName string, categoryName string, winRecord
 func displayRoundStats(round string, winRecords []WinRecord) {
 	if len(winRecords) > 0 {
 		winByTypes := groupByWinType(winRecords).count()
-		winByGolden := groupByGoldenScore(winRecords).count()
+		winByFinishMode := groupByFinishMode(winRecords).count()
 		fmt.Println("======== " + round + " ================")
 		fmt.Printf("# fights: %d\n", len(winRecords))
 		fmt.Printf("# wins by ippon: %d %s\n", winByTypes[WinByIppon], formatPercentage(winByTypes[WinByIppon], len(winRecords)))
@@ -26,8 +26,8 @@ func displayRoundStats(round string, winRecords []WinRecord) {
 		fmt.Printf("# wins by 3 shidos: %d %s\n", winByTypes[WinByShido], formatPercentage(winByTypes[WinByShido], len(winRecords)))
 		fmt.Printf("# wins by direct hansoku-make: %d %s\n", winByTypes[WinByHansokuMake], formatPercentage(winByTypes[WinByHansokuMake], len(winRecords)))
 		fmt.Println("------------------------------------")
-		fmt.Printf("# wins in regular time: %d %s\n", winByGolden[false], formatPercentage(winByGolden[false], len(winRecords)))
-		fmt.Printf("# wins in Golden Score: %d %s\n", winByGolden[true], formatPercentage(winByGolden[true], len(winRecords)))
+		fmt.Printf("# wins in regular time: %d %s\n", winByFinishMode[regularTime], formatPercentage(winByFinishMode[regularTime], len(winRecords)))
+		fmt.Printf("# wins in Golden Score: %d %s\n", winByFinishMode[goldenScore], formatPercentage(winByFinishMode[goldenScore], len(winRecords)))
 		fmt.Println("====================================")
 	}
 }
