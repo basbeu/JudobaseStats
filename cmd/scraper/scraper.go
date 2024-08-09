@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/basbeu/JudobaseStats/internal/category"
 	"github.com/basbeu/JudobaseStats/pkg/scraper"
 )
 
@@ -26,7 +27,7 @@ func main() {
 
 	scraperClient := scraper.NewScraperClient(*competitionID, logger)
 
-	for _, category := range scraper.Categories {
+	for _, category := range category.Categories {
 		categoryBytes, err := scraperClient.ScrapeCategory(category)
 		if err != nil {
 			logger.Error("failed to scrape", "err", err)

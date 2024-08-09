@@ -5,6 +5,8 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+
+	"github.com/basbeu/JudobaseStats/internal/category"
 )
 
 type ScraperClient struct {
@@ -19,7 +21,7 @@ func NewScraperClient(competitionID string, logger *slog.Logger) *ScraperClient 
 	}
 }
 
-func (s *ScraperClient) ScrapeCategory(category Category) ([]byte, error) {
+func (s *ScraperClient) ScrapeCategory(category category.Category) ([]byte, error) {
 	url := fmt.Sprintf("https://data.ijf.org/api/get_json?params[action]=contest.find&params[id_competition]=%s&params[id_weight]=%d&params[order_by]=cnum", s.competitionID, category.WeightID())
 
 	req, err := http.NewRequest("GET", url, nil)

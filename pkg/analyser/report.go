@@ -8,6 +8,7 @@ import (
 
 type Reporter interface {
 	ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord)
+	ReportGenderStats(competitionName string, winRecords []WinRecord)
 }
 
 func NewReporter(mode string, outputPath string) Reporter {
@@ -29,6 +30,10 @@ func (r stdOutReporter) ReportCategoryStats(competitionName string, categoryName
 	reportCategoryStats(os.Stdout, competitionName, categoryName, winRecords)
 }
 
+func (r stdOutReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+	reportGenderStats(os.Stdout, competitionName, winRecords)
+}
+
 type txtReporter struct {
 	outputPath string
 }
@@ -40,6 +45,16 @@ func (r txtReporter) ReportCategoryStats(competitionName string, categoryName st
 	}
 	defer file.Close()
 	reportCategoryStats(file, competitionName, categoryName, winRecords)
+}
+
+func (r txtReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+	file, err := os.OpenFile(fmt.Sprintf("%s/analysis-%s%s.txt", r.outputPath, competitionName, "gender"), os.O_CREATE, 0666)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	reportGenderStats(file, competitionName, winRecords)
 }
 
 func reportCategoryStats(out io.Writer, competitionName string, categoryName string, winRecords []WinRecord) {
@@ -55,19 +70,29 @@ func reportCategoryStats(out io.Writer, competitionName string, categoryName str
 	reportRoundStats(out, "ALL ROUNDS", winRecords)
 }
 
+func reportGenderStats(out io.Writer, competitionName string, winRecords []WinRecord) {
+	if len(winRecords) > 0 {
+		winsByGender := groupByGender(winRecords)
+		fmt.Fprintln(out, "====================================")
+		fmt.Fprintf(out, "Competition: %s\n", competitionName)
+		reportRoundStats(out, male.string(), winsByGender[male])
+		reportRoundStats(out, female.string(), winsByGender[female])
+	}
+}
+
 func reportRoundStats(out io.Writer, round string, winRecords []WinRecord) {
 	if len(winRecords) > 0 {
-		winByTypes := groupByWinType(winRecords).count()
-		winByFinishMode := groupByFinishMode(winRecords).count()
+		winsByTypes := groupByWinType(winRecords).count()
+		winsByFinishMode := groupByFinishMode(winRecords).count()
 		fmt.Fprintln(out, "======== "+round+" ================")
 		fmt.Fprintf(out, "# fights: %d\n", len(winRecords))
-		fmt.Fprintf(out, "# wins by ippon: %d %s\n", winByTypes[winByIppon], formatPercentage(winByTypes[winByIppon], len(winRecords)))
-		fmt.Fprintf(out, "# wins by waza-ari: %d %s\n", winByTypes[winByWaza], formatPercentage(winByTypes[winByWaza], len(winRecords)))
-		fmt.Fprintf(out, "# wins by 3 shidos: %d %s\n", winByTypes[winByShido], formatPercentage(winByTypes[winByShido], len(winRecords)))
-		fmt.Fprintf(out, "# wins by direct hansoku-make: %d %s\n", winByTypes[winByHansokuMake], formatPercentage(winByTypes[winByHansokuMake], len(winRecords)))
+		fmt.Fprintf(out, "# wins by ippon: %d %s\n", winsByTypes[winByIppon], formatPercentage(winsByTypes[winByIppon], len(winRecords)))
+		fmt.Fprintf(out, "# wins by waza-ari: %d %s\n", winsByTypes[winByWaza], formatPercentage(winsByTypes[winByWaza], len(winRecords)))
+		fmt.Fprintf(out, "# wins by 3 shidos: %d %s\n", winsByTypes[winByShido], formatPercentage(winsByTypes[winByShido], len(winRecords)))
+		fmt.Fprintf(out, "# wins by direct hansoku-make: %d %s\n", winsByTypes[winByHansokuMake], formatPercentage(winsByTypes[winByHansokuMake], len(winRecords)))
 		fmt.Fprintln(out, "------------------------------------")
-		fmt.Fprintf(out, "# wins in regular time: %d %s\n", winByFinishMode[regularTime], formatPercentage(winByFinishMode[regularTime], len(winRecords)))
-		fmt.Fprintf(out, "# wins in Golden Score: %d %s\n", winByFinishMode[goldenScore], formatPercentage(winByFinishMode[goldenScore], len(winRecords)))
+		fmt.Fprintf(out, "# wins in regular time: %d %s\n", winsByFinishMode[regularTime], formatPercentage(winsByFinishMode[regularTime], len(winRecords)))
+		fmt.Fprintf(out, "# wins in Golden Score: %d %s\n", winsByFinishMode[goldenScore], formatPercentage(winsByFinishMode[goldenScore], len(winRecords)))
 		fmt.Fprintln(out, "====================================")
 	}
 }

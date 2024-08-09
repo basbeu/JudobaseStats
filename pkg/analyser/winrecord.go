@@ -6,6 +6,7 @@ type WinRecord struct {
 	winType    winType
 	finishMode finishMode
 	round      round
+	gender     gender
 }
 
 func newWinRecord(contest judobase.Contest) WinRecord {
@@ -13,6 +14,7 @@ func newWinRecord(contest judobase.Contest) WinRecord {
 		winType:    parseWinType(contest),
 		finishMode: parseFinishMode(contest),
 		round:      parseRound(contest),
+		gender:     parseGender(contest),
 	}
 }
 

@@ -16,7 +16,7 @@ func (g groupByResult) count() map[groupingKey]int {
 }
 
 func groupByWinType(winRecords []WinRecord) groupByResult {
-	winRecordByType := groupByResult{
+	winRecordsByType := groupByResult{
 		winByIppon:       {},
 		winByWaza:        {},
 		winByShido:       {},
@@ -24,25 +24,25 @@ func groupByWinType(winRecords []WinRecord) groupByResult {
 		winUnknown:       {},
 	}
 	for _, r := range winRecords {
-		winRecordByType[r.winType] = append(winRecordByType[r.winType], r)
+		winRecordsByType[r.winType] = append(winRecordsByType[r.winType], r)
 	}
-	return winRecordByType
+	return winRecordsByType
 }
 
 func groupByFinishMode(winRecords []WinRecord) groupByResult {
-	winByFinishMode := groupByResult{
+	winRecordsByFinishMode := groupByResult{
 		goldenScore: {},
 		regularTime: {},
 	}
 	for _, r := range winRecords {
-		winByFinishMode[r.finishMode] = append(winByFinishMode[r.finishMode], r)
+		winRecordsByFinishMode[r.finishMode] = append(winRecordsByFinishMode[r.finishMode], r)
 	}
 
-	return winByFinishMode
+	return winRecordsByFinishMode
 }
 
 func groupByRound(winRecords []WinRecord) groupByResult {
-	winRecordByRound := groupByResult{
+	winRecordsByRound := groupByResult{
 		round64:      {},
 		round32:      {},
 		round16:      {},
@@ -51,10 +51,22 @@ func groupByRound(winRecords []WinRecord) groupByResult {
 		repechage:    {},
 		bronze:       {},
 		final:        {},
-		unknown:      {},
+		unknownRound: {},
 	}
 	for _, r := range winRecords {
-		winRecordByRound[r.round] = append(winRecordByRound[r.round], r)
+		winRecordsByRound[r.round] = append(winRecordsByRound[r.round], r)
 	}
-	return winRecordByRound
+	return winRecordsByRound
+}
+
+func groupByGender(winRecords []WinRecord) groupByResult {
+	winRecordsByGender := groupByResult{
+		male:          {},
+		female:        {},
+		unknownGender: {},
+	}
+	for _, r := range winRecords {
+		winRecordsByGender[r.gender] = append(winRecordsByGender[r.gender], r)
+	}
+	return winRecordsByGender
 }

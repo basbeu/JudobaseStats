@@ -13,7 +13,7 @@ const (
 	repechage
 	bronze
 	final
-	unknown
+	unknownRound
 )
 
 var rounds []round
@@ -67,8 +67,8 @@ func parseRound(contest judobase.Contest) round {
 		case "Final":
 			return final
 		default:
-			return unknown
+			return unknownRound
 		}
 	}
-	return unknown
+	return unknownRound
 }

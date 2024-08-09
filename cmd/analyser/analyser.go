@@ -36,4 +36,5 @@ func main() {
 		overallWinRecords = append(overallWinRecords, winRecords...)
 	}
 	reporter.ReportCategoryStats(competition.Name, "all", overallWinRecords)
+	reporter.ReportGenderStats(competition.Name, overallWinRecords)
 }
