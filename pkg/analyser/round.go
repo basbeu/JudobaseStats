@@ -49,23 +49,25 @@ func (r round) string() string {
 
 func parseRound(contest judobase.Contest) round {
 	if contest.RoundName != nil {
-		switch *contest.RoundName {
-		case "Round of 64":
+		switch *contest.Round {
+		case "5":
 			return round64
-		case "Round of 32":
+		case "4":
 			return round32
-		case "Round of 16":
+		case "3":
 			return round16
-		case "Quarter-Final":
+		case "2":
 			return quarterFinal
-		case "Semi-Final":
-			return semiFinal
-		case "Repechage":
+		case "1":
+			if *contest.RoundName == "Semi-Final" {
+				return semiFinal
+			}
 			return repechage
-		case "Bronze":
+		case "0":
+			if *contest.RoundName == "Final" {
+				return final
+			}
 			return bronze
-		case "Final":
-			return final
 		default:
 			return unknownRound
 		}
