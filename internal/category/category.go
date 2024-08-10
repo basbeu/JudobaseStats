@@ -85,7 +85,7 @@ func FromWeightID(weightID string) (Category, error) {
 	if err != nil {
 		return UnknownCategory, err
 	}
-	if id < int64(U60) || id >= int64(O78) {
+	if id < int64(U60) || id > int64(O78) {
 		return UnknownCategory, errors.New("unknown category")
 	}
 	return Category(id), nil
