@@ -37,4 +37,9 @@ func main() {
 	}
 	reporter.ReportCategoryStats(competition.Name, "all", overallWinRecords)
 	reporter.ReportGenderStats(competition.Name, overallWinRecords)
+	err = reporter.Close()
+	if err != nil {
+		logger.Error("failed to close reporter", "err", err)
+		return
+	}
 }

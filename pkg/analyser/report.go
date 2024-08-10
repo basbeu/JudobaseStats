@@ -1,6 +1,7 @@
 package analyser
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"os"
@@ -9,36 +10,48 @@ import (
 type Reporter interface {
 	ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord)
 	ReportGenderStats(competitionName string, winRecords []WinRecord)
+	Close() error
 }
 
 func NewReporter(mode string, outputPath string) Reporter {
 	switch mode {
 	case "stdout":
-		return stdOutReporter{}
+		return &stdOutReporter{}
 	case "txt":
-		return txtReporter{
+		return &txtReporter{
 			outputPath: outputPath,
 		}
+	case "csv":
+		return &csvReporter{
+			outputPath: outputPath,
+			csvContent: [][]string{
+				{"competition", "category", "round", "fights", "ippon", "waza", "shidos", "hsk", "regular", "golden"},
+			},
+		}
 	default:
-		return stdOutReporter{}
+		return &stdOutReporter{}
 	}
 }
 
 type stdOutReporter struct{}
 
-func (r stdOutReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
+func (r *stdOutReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
 	reportCategoryStats(os.Stdout, competitionName, categoryName, winRecords)
 }
 
-func (r stdOutReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+func (r *stdOutReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
 	reportGenderStats(os.Stdout, competitionName, winRecords)
+}
+
+func (r *stdOutReporter) Close() error {
+	return nil
 }
 
 type txtReporter struct {
 	outputPath string
 }
 
-func (r txtReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
+func (r *txtReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
 	file, err := os.OpenFile(fmt.Sprintf("%s/analysis-%s%s.txt", r.outputPath, competitionName, categoryName), os.O_CREATE, 0666)
 	if err != nil {
 		return
@@ -47,7 +60,7 @@ func (r txtReporter) ReportCategoryStats(competitionName string, categoryName st
 	reportCategoryStats(file, competitionName, categoryName, winRecords)
 }
 
-func (r txtReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+func (r *txtReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
 	file, err := os.OpenFile(fmt.Sprintf("%s/analysis-%s%s.txt", r.outputPath, competitionName, "gender"), os.O_CREATE, 0666)
 	if err != nil {
 		return
@@ -55,6 +68,10 @@ func (r txtReporter) ReportGenderStats(competitionName string, winRecords []WinR
 	defer file.Close()
 
 	reportGenderStats(file, competitionName, winRecords)
+}
+
+func (r *txtReporter) Close() error {
+	return nil
 }
 
 func reportCategoryStats(out io.Writer, competitionName string, categoryName string, winRecords []WinRecord) {
@@ -72,11 +89,19 @@ func reportCategoryStats(out io.Writer, competitionName string, categoryName str
 
 func reportGenderStats(out io.Writer, competitionName string, winRecords []WinRecord) {
 	if len(winRecords) > 0 {
-		winsByGender := groupByGender(winRecords)
 		fmt.Fprintln(out, "====================================")
 		fmt.Fprintf(out, "Competition: %s\n", competitionName)
-		reportRoundStats(out, male.string(), winsByGender[male])
-		reportRoundStats(out, female.string(), winsByGender[female])
+
+		winsByGender := groupByGender(winRecords)
+		for _, gender := range genders {
+			fmt.Fprintln(out, "====================================")
+			fmt.Fprintf(out, "Gender: %s\n", gender.string())
+			groupByRound := groupByRound(winsByGender[gender])
+			for _, round := range rounds {
+				reportRoundStats(out, round.string(), groupByRound[round])
+			}
+			reportRoundStats(out, "ALL ROUNDS", winsByGender[gender])
+		}
 	}
 }
 
@@ -100,4 +125,62 @@ func reportRoundStats(out io.Writer, round string, winRecords []WinRecord) {
 func formatPercentage(part int, total int) string {
 	percentage := float64(part) / float64(total) * 100
 	return fmt.Sprintf("(%.2f%%)", percentage)
+}
+
+type csvReporter struct {
+	outputPath string
+	csvContent [][]string
+}
+
+func (r *csvReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
+	groupByRound := groupByRound(winRecords)
+	for _, round := range rounds {
+		r.csvContent = append(r.csvContent, reportRoundStatsArray(competitionName, categoryName, round.string(), groupByRound[round]))
+	}
+	r.csvContent = append(r.csvContent, reportRoundStatsArray(competitionName, categoryName, "all", winRecords))
+}
+
+func (r *csvReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+	if len(winRecords) > 0 {
+		winsByGender := groupByGender(winRecords)
+
+		for _, gender := range genders {
+			groupByRound := groupByRound(winsByGender[gender])
+			for _, round := range rounds {
+				r.csvContent = append(r.csvContent, reportRoundStatsArray(competitionName, gender.string(), round.string(), groupByRound[round]))
+			}
+
+			r.csvContent = append(r.csvContent, reportRoundStatsArray(competitionName, gender.string(), "all", winsByGender[gender]))
+		}
+	}
+}
+
+func (r *csvReporter) Close() error {
+	if len(r.csvContent) >= 1 && len(r.csvContent[0]) >= 0 {
+		file, err := os.OpenFile(fmt.Sprintf("%s/analysis-%s.csv", r.outputPath, r.csvContent[1][0]), os.O_CREATE, 0666)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		w := csv.NewWriter(file)
+		return w.WriteAll(r.csvContent)
+	}
+	return nil
+}
+
+func reportRoundStatsArray(competitionName string, categoryName string, round string, winRecords []WinRecord) []string {
+	winsByTypes := groupByWinType(winRecords).count()
+	winsByFinishMode := groupByFinishMode(winRecords).count()
+	return []string{
+		competitionName,
+		categoryName,
+		round,
+		fmt.Sprint(len(winRecords)),
+		fmt.Sprint(winsByTypes[winByIppon]),
+		fmt.Sprint(winsByTypes[winByWaza]),
+		fmt.Sprint(winsByTypes[winByShido]),
+		fmt.Sprint(winsByTypes[winByHansokuMake]),
+		fmt.Sprint(winsByFinishMode[regularTime]),
+		fmt.Sprint(winsByFinishMode[goldenScore]),
+	}
 }

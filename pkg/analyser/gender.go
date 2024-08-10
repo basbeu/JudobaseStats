@@ -15,6 +15,12 @@ const (
 	unknownGender
 )
 
+var genders []gender
+
+func init() {
+	genders = []gender{male, female}
+}
+
 func (g gender) string() string {
 	switch g {
 	case male:
