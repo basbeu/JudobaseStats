@@ -39,6 +39,7 @@ There are several output modes:
 - stdout: print the analysis to the standard output (default value)
 - txt: print the analysis to txt files. The location of the files is controled with the `output` flag.
 - csv: format the analysis in a single csv file. The location of the file is controled with the `output` flag.
+- json: format the analysis in a single json file. The location of the file is controled with the `output` flag.
 
 ### Usage :
 ```

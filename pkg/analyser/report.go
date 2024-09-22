@@ -2,6 +2,7 @@ package analyser
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -27,6 +28,10 @@ func NewReporter(mode string, outputPath string) Reporter {
 			csvContent: [][]string{
 				{"competition", "category", "round", "fights", "ippon", "waza", "shidos", "hsk", "unknown", "regular", "golden"},
 			},
+		}
+	case "json":
+		return &jsonReporter{
+			outputPath: outputPath,
 		}
 	default:
 		return &stdOutReporter{}
@@ -185,4 +190,46 @@ func reportRoundStatsArray(competitionName string, categoryName string, round st
 		fmt.Sprint(winsByFinishMode[regularTime]),
 		fmt.Sprint(winsByFinishMode[goldenScore]),
 	}
+}
+
+type jsonReporter struct {
+	outputPath string
+	stats      CompetitionStats
+}
+
+func (r *jsonReporter) ReportCategoryStats(competitionName string, categoryName string, winRecords []WinRecord) {
+	r.stats.Name = competitionName
+	category := CategoryStats{
+		Category: categoryName,
+		Stats:    []RoundStats{},
+	}
+	groupByRound := groupByRound(winRecords)
+	for _, round := range rounds {
+		category.Stats = append(category.Stats, newRoundStats(round.string(), groupByRound[round]))
+	}
+	category.Stats = append(category.Stats, newRoundStats("all", winRecords))
+	r.stats.Stats = append(r.stats.Stats, category)
+}
+
+func (r *jsonReporter) ReportGenderStats(competitionName string, winRecords []WinRecord) {
+	if len(winRecords) > 0 {
+		winsByGender := groupByGender(winRecords)
+
+		for _, gender := range genders {
+			r.ReportCategoryStats(competitionName, gender.string(), winsByGender[gender])
+		}
+	}
+}
+
+func (r *jsonReporter) Close() error {
+	file, err := os.OpenFile(fmt.Sprintf("%s/analysis-%s.json", r.outputPath, r.stats.Name), os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	content, _ := json.MarshalIndent(r.stats, "", " ")
+
+	fmt.Fprint(file, string(content))
+	return nil
 }
