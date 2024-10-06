@@ -30,7 +30,7 @@ func (t winType) string() string {
 }
 
 func parseWinType(contest judobase.Contest) winType {
-	if contest.IDWinner != nil && contest.IDPersonWhite != nil && *contest.IDPersonWhite == *contest.IDWinner {
+	if isWinnerWhite(contest) {
 		if (contest.IpponWhite != nil && *contest.IpponWhite == "1") || (contest.WazaWhite != nil && *contest.WazaWhite == "2") {
 			if contest.PenaltyBlue != nil && *contest.PenaltyBlue == "3" {
 				return winByShido
@@ -41,7 +41,7 @@ func parseWinType(contest judobase.Contest) winType {
 		} else if contest.WazaWhite != nil && *contest.WazaWhite == "1" {
 			return winByWaza
 		}
-	} else if contest.IDWinner != nil && contest.IDPersonBlue != nil && *contest.IDPersonBlue == *contest.IDWinner {
+	} else if isWinnerBlue(contest) {
 		if (contest.IpponBlue != nil && *contest.IpponBlue == "1") || (contest.WazaBlue != nil && *contest.WazaBlue == "2") {
 			if contest.PenaltyWhite != nil && *contest.PenaltyWhite == "3" {
 				return winByShido
@@ -54,4 +54,12 @@ func parseWinType(contest judobase.Contest) winType {
 		}
 	}
 	return winUnknown
+}
+
+func isWinnerWhite(contest judobase.Contest) bool {
+	return contest.IDWinner != nil && contest.IDPersonWhite != nil && *contest.IDPersonWhite == *contest.IDWinner
+}
+
+func isWinnerBlue(contest judobase.Contest) bool {
+	return contest.IDWinner != nil && contest.IDPersonBlue != nil && *contest.IDPersonBlue == *contest.IDWinner
 }
