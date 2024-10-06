@@ -26,7 +26,7 @@ func NewReporter(mode string, outputPath string) Reporter {
 		return &csvReporter{
 			outputPath: outputPath,
 			csvContent: [][]string{
-				{"competition", "category", "round", "fights", "ippon", "waza", "shidos", "hsk", "unknown", "regular", "golden"},
+				{"competition", "category", "round", "fights", "ippon", "waza", "yuko", "3 shidos", "hsk", "unknown", "regular", "golden"},
 			},
 		}
 	case "json":
@@ -118,6 +118,7 @@ func reportRoundStats(out io.Writer, round string, winRecords []WinRecord) {
 		fmt.Fprintf(out, "# fights: %d\n", len(winRecords))
 		fmt.Fprintf(out, "# wins by ippon: %d %s\n", winsByTypes[winByIppon], formatPercentage(winsByTypes[winByIppon], len(winRecords)))
 		fmt.Fprintf(out, "# wins by waza-ari: %d %s\n", winsByTypes[winByWaza], formatPercentage(winsByTypes[winByWaza], len(winRecords)))
+		fmt.Fprintf(out, "# wins by yuko: %d %s\n", winsByTypes[winByYuko], formatPercentage(winsByTypes[winByYuko], len(winRecords)))
 		fmt.Fprintf(out, "# wins by 3 shidos: %d %s\n", winsByTypes[winBy3Shidos], formatPercentage(winsByTypes[winBy3Shidos], len(winRecords)))
 		fmt.Fprintf(out, "# wins by direct hansoku-make: %d %s\n", winsByTypes[winByHansokuMake], formatPercentage(winsByTypes[winByHansokuMake], len(winRecords)))
 		fmt.Fprintf(out, "# unknown win types: %d %s\n", winsByTypes[winUnknown], formatPercentage(winsByTypes[winUnknown], len(winRecords)))
@@ -184,6 +185,7 @@ func reportRoundStatsArray(competitionName string, categoryName string, round st
 		fmt.Sprint(len(winRecords)),
 		fmt.Sprint(winsByTypes[winByIppon]),
 		fmt.Sprint(winsByTypes[winByWaza]),
+		fmt.Sprint(winsByTypes[winByYuko]),
 		fmt.Sprint(winsByTypes[winBy3Shidos]),
 		fmt.Sprint(winsByTypes[winByHansokuMake]),
 		fmt.Sprint(winsByTypes[winUnknown]),

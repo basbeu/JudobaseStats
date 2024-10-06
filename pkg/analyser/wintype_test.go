@@ -25,10 +25,20 @@ func generateWinTypes(isWinnerWhite bool) []map[winType]judobase.Contest {
 		},
 		{
 			winByIppon: {
-				IpponWhite: whiteScore(isWinnerWhite, "1", "1"),
+				IpponWhite: whiteScore(isWinnerWhite, "1", "0"),
 				WazaWhite:  whiteScore(isWinnerWhite, "1", "1"),
-				IpponBlue:  blueScore(isWinnerWhite, "1", "1"),
+				IpponBlue:  blueScore(isWinnerWhite, "1", "0"),
 				WazaBlue:   blueScore(isWinnerWhite, "1", "1"),
+			},
+		},
+		{
+			winByIppon: {
+				IpponWhite: whiteScore(isWinnerWhite, "1", "0"),
+				WazaWhite:  whiteScore(isWinnerWhite, "1", "1"),
+				YukoWhite:  whiteScore(isWinnerWhite, "1", "0"),
+				IpponBlue:  blueScore(isWinnerWhite, "1", "0"),
+				WazaBlue:   blueScore(isWinnerWhite, "1", "1"),
+				YukoBlue:   blueScore(isWinnerWhite, "1", "0"),
 			},
 		},
 		{
@@ -44,9 +54,61 @@ func generateWinTypes(isWinnerWhite bool) []map[winType]judobase.Contest {
 			},
 		},
 		{
+			winByIppon: {
+				WazaWhite: whiteScore(isWinnerWhite, "2", "1"),
+				YukoWhite: whiteScore(isWinnerWhite, "1", "0"),
+				WazaBlue:  blueScore(isWinnerWhite, "2", "1"),
+				YukoBlue:  blueScore(isWinnerWhite, "1", "0"),
+			},
+		},
+		{
 			winByWaza: {
 				WazaWhite: whiteScore(isWinnerWhite, "1", "0"),
 				WazaBlue:  blueScore(isWinnerWhite, "1", "0"),
+			},
+		},
+		{
+			winByWaza: {
+				WazaWhite: whiteScore(isWinnerWhite, "1", "0"),
+				YukoWhite: whiteScore(isWinnerWhite, "1", "0"),
+				WazaBlue:  blueScore(isWinnerWhite, "1", "0"),
+				YukoBlue:  blueScore(isWinnerWhite, "1", "0"),
+			},
+		},
+		{
+			winByWaza: {
+				WazaWhite: whiteScore(isWinnerWhite, "1", "0"),
+				YukoWhite: whiteScore(isWinnerWhite, "1", "1"),
+				WazaBlue:  blueScore(isWinnerWhite, "1", "0"),
+				YukoBlue:  blueScore(isWinnerWhite, "1", "1"),
+			},
+		},
+		{
+			winByWaza: {
+				WazaWhite: whiteScore(isWinnerWhite, "1", "1"),
+				YukoWhite: whiteScore(isWinnerWhite, "1", "0"),
+				WazaBlue:  blueScore(isWinnerWhite, "1", "1"),
+				YukoBlue:  blueScore(isWinnerWhite, "1", "0"),
+			},
+		},
+		{
+			winByYuko: {
+				YukoWhite: whiteScore(isWinnerWhite, "1", "0"),
+				YukoBlue:  blueScore(isWinnerWhite, "1", "0"),
+			},
+		},
+		{
+			winByYuko: {
+				YukoWhite: whiteScore(isWinnerWhite, "3", "2"),
+				YukoBlue:  blueScore(isWinnerWhite, "3", "2"),
+			},
+		},
+		{
+			winByYuko: {
+				YukoWhite:    whiteScore(isWinnerWhite, "3", "2"),
+				YukoBlue:     blueScore(isWinnerWhite, "3", "2"),
+				PenaltyWhite: whiteScore(isWinnerWhite, "2", "2"),
+				PenaltyBlue:  blueScore(isWinnerWhite, "2", "2"),
 			},
 		},
 		{

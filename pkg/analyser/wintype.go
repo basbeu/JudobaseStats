@@ -9,6 +9,7 @@ type winType int
 const (
 	winByIppon winType = iota
 	winByWaza
+	winByYuko
 	winBy3Shidos
 	winByHansokuMake
 	winUnknown
@@ -40,6 +41,8 @@ func parseWinType(contest judobase.Contest) winType {
 			return winByIppon
 		} else if contest.WazaWhite != nil && *contest.WazaWhite == "1" {
 			return winByWaza
+		} else if contest.YukoWhite != nil && *contest.YukoWhite != "0" {
+			return winByYuko
 		}
 	} else if isWinnerBlue(contest) {
 		if (contest.IpponBlue != nil && *contest.IpponBlue == "1") || (contest.WazaBlue != nil && *contest.WazaBlue == "2") {
@@ -51,6 +54,8 @@ func parseWinType(contest judobase.Contest) winType {
 			return winByIppon
 		} else if contest.WazaBlue != nil && *contest.WazaBlue == "1" {
 			return winByWaza
+		} else if contest.YukoBlue != nil && *contest.YukoBlue != "0" {
+			return winByYuko
 		}
 	}
 	return winUnknown

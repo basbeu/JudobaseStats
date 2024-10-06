@@ -59,11 +59,12 @@ func main() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	header := table.Row{"stat"}
-	rowOrder := []string{"Fights", "Ippon", "Waza", "Shidos", "Hansokumake", "Unknown", "Regular", "Golden"}
+	rowOrder := []string{"Fights", "Ippon", "Waza", "Yuko", "Shidos", "Hansokumake", "Unknown", "Regular", "Golden"}
 	rows := map[string]table.Row{
 		"Fights":      {"# Fights"},
 		"Ippon":       {"# Wins by ippon"},
 		"Waza":        {"# Wins by waza-ari"},
+		"Yuko":        {"# Wins by yuko"},
 		"Shidos":      {"# Wins by 3 shidos"},
 		"Hansokumake": {"# Wins by direct hansokumake"},
 		"Unknown":     {"# Unknown win type"},
@@ -75,7 +76,8 @@ func main() {
 		rows["Fights"] = append(rows["Fights"], fmt.Sprintf("%d", stats.Fights))
 		rows["Ippon"] = append(rows["Ippon"], fmt.Sprintf("%d %s", stats.Ippon, formatPercentage(stats.Ippon, stats.Fights)))
 		rows["Waza"] = append(rows["Waza"], fmt.Sprintf("%d %s", stats.Waza, formatPercentage(stats.Waza, stats.Fights)))
-		rows["Shidos"] = append(rows["Shidos"], fmt.Sprintf("%d %s", stats.Shidos, formatPercentage(stats.Shidos, stats.Fights)))
+		rows["Yuko"] = append(rows["Yuko"], fmt.Sprintf("%d %s", stats.Yuko, formatPercentage(stats.Yuko, stats.Fights)))
+		rows["Shidos"] = append(rows["Shidos"], fmt.Sprintf("%d %s", stats.MaxShidos, formatPercentage(stats.MaxShidos, stats.Fights)))
 		rows["Hansokumake"] = append(rows["Hansokumake"], fmt.Sprintf("%d %s", stats.Hansokumake, formatPercentage(stats.Hansokumake, stats.Fights)))
 		rows["Unknown"] = append(rows["Unknown"], fmt.Sprintf("%d %s", stats.Unknown, formatPercentage(stats.Unknown, stats.Fights)))
 		rows["Regular"] = append(rows["Regular"], fmt.Sprintf("%d %s", stats.Regular, formatPercentage(stats.Regular, stats.Fights)))

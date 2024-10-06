@@ -15,7 +15,8 @@ type RoundStats struct {
 	Fights      int
 	Ippon       int
 	Waza        int
-	Shidos      int
+	Yuko        int
+	MaxShidos   int
 	Hansokumake int
 	Unknown     int
 	Regular     int
@@ -31,7 +32,8 @@ func newRoundStats(round string, winRecords []WinRecord) RoundStats {
 		Fights:      len(winRecords),
 		Ippon:       winsByTypes[winByIppon],
 		Waza:        winsByTypes[winByWaza],
-		Shidos:      winsByTypes[winBy3Shidos],
+		Yuko:        winsByTypes[winByYuko],
+		MaxShidos:   winsByTypes[winBy3Shidos],
 		Hansokumake: winsByTypes[winByHansokuMake],
 		Unknown:     winsByTypes[winUnknown],
 		Regular:     winsByFinishMode[regularTime],
