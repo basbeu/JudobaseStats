@@ -31,7 +31,7 @@ func newRoundStats(round string, winRecords []WinRecord) RoundStats {
 		Fights:      len(winRecords),
 		Ippon:       winsByTypes[winByIppon],
 		Waza:        winsByTypes[winByWaza],
-		Shidos:      winsByTypes[winByShido],
+		Shidos:      winsByTypes[winBy3Shidos],
 		Hansokumake: winsByTypes[winByHansokuMake],
 		Unknown:     winsByTypes[winUnknown],
 		Regular:     winsByFinishMode[regularTime],

@@ -19,7 +19,7 @@ func groupByWinType(winRecords []WinRecord) groupByResult {
 	winRecordsByType := groupByResult{
 		winByIppon:       {},
 		winByWaza:        {},
-		winByShido:       {},
+		winBy3Shidos:     {},
 		winByHansokuMake: {},
 		winUnknown:       {},
 	}
