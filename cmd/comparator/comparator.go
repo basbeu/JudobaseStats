@@ -15,7 +15,7 @@ import (
 
 func main() {
 	inputPath := flag.String("input", "../../analysis", "path of the input folder")
-	analysisFlag := flag.String("analysis", "analysis-Olympic Games Paris 2024.json,analysis-Olympic Games Tokyo 2020.json", "analysis files to compare")
+	analysisFlag := flag.String("analysis", "analysis-Olympic Games Paris 2024.json,analysis-Olympic Games Tokyo 2020.json,analysis-Olympic Games Rio de Janeiro 2016.json", "analysis files to compare")
 
 	flag.Parse()
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
@@ -59,12 +59,13 @@ func main() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	header := table.Row{"stat"}
-	rowOrder := []string{"Fights", "Ippon", "Waza", "Yuko", "Shidos", "Hansokumake", "Unknown", "Regular", "Golden"}
+	rowOrder := []string{"Fights", "Ippon", "Waza", "Yuko", "Shido", "Shidos", "Hansokumake", "Unknown", "Regular", "Golden"}
 	rows := map[string]table.Row{
 		"Fights":      {"# Fights"},
 		"Ippon":       {"# Wins by ippon"},
 		"Waza":        {"# Wins by waza-ari"},
 		"Yuko":        {"# Wins by yuko"},
+		"Shido":       {"# Wins by shido"},
 		"Shidos":      {"# Wins by 3 shidos"},
 		"Hansokumake": {"# Wins by direct hansokumake"},
 		"Unknown":     {"# Unknown win type"},
@@ -77,6 +78,7 @@ func main() {
 		rows["Ippon"] = append(rows["Ippon"], fmt.Sprintf("%d %s", stats.Ippon, formatPercentage(stats.Ippon, stats.Fights)))
 		rows["Waza"] = append(rows["Waza"], fmt.Sprintf("%d %s", stats.Waza, formatPercentage(stats.Waza, stats.Fights)))
 		rows["Yuko"] = append(rows["Yuko"], fmt.Sprintf("%d %s", stats.Yuko, formatPercentage(stats.Yuko, stats.Fights)))
+		rows["Shido"] = append(rows["Shido"], fmt.Sprintf("%d %s", stats.Shido, formatPercentage(stats.Shido, stats.Fights)))
 		rows["Shidos"] = append(rows["Shidos"], fmt.Sprintf("%d %s", stats.MaxShidos, formatPercentage(stats.MaxShidos, stats.Fights)))
 		rows["Hansokumake"] = append(rows["Hansokumake"], fmt.Sprintf("%d %s", stats.Hansokumake, formatPercentage(stats.Hansokumake, stats.Fights)))
 		rows["Unknown"] = append(rows["Unknown"], fmt.Sprintf("%d %s", stats.Unknown, formatPercentage(stats.Unknown, stats.Fights)))
