@@ -12,6 +12,7 @@ const (
 	winByYuko
 	winBy3Shidos
 	winByHansokuMake
+	winByShido
 	winUnknown
 )
 
@@ -23,6 +24,8 @@ func (t winType) string() string {
 		return "Waza-Ari"
 	case winBy3Shidos:
 		return "3 shidos"
+	case winByShido:
+		return "win by shido"
 	case winByHansokuMake:
 		return "Hansoku-make"
 	default:
@@ -43,6 +46,8 @@ func parseWinType(contest judobase.Contest) winType {
 			return winByWaza
 		} else if contest.YukoWhite != nil && *contest.YukoWhite != "0" {
 			return winByYuko
+		} else if *contest.PenaltyBlue > *contest.PenaltyWhite {
+			return winByShido
 		}
 	} else if isWinnerBlue(contest) {
 		if (contest.IpponBlue != nil && *contest.IpponBlue == "1") || (contest.WazaBlue != nil && *contest.WazaBlue == "2") {
@@ -56,6 +61,8 @@ func parseWinType(contest judobase.Contest) winType {
 			return winByWaza
 		} else if contest.YukoBlue != nil && *contest.YukoBlue != "0" {
 			return winByYuko
+		} else if *contest.PenaltyWhite > *contest.PenaltyBlue {
+			return winByShido
 		}
 	}
 	return winUnknown
