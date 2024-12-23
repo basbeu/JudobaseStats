@@ -46,6 +46,5 @@ func getFightDuration(contest judobase.Contest) int {
 			}
 		}
 	}
-
 	return 240
 }

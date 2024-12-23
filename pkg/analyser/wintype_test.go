@@ -112,7 +112,7 @@ func generateWinTypes(isWinnerWhite bool) []map[winType]judobase.Contest {
 			},
 		},
 		{
-			winBy3Shidos: {
+			winByMaxShidos: {
 				IpponWhite:   whiteScore(isWinnerWhite, "1", "0"),
 				IpponBlue:    blueScore(isWinnerWhite, "1", "0"),
 				PenaltyWhite: whiteScore(isWinnerWhite, "0", "3"),
@@ -120,7 +120,7 @@ func generateWinTypes(isWinnerWhite bool) []map[winType]judobase.Contest {
 			},
 		},
 		{
-			winBy3Shidos: {
+			winByMaxShidos: {
 				IpponWhite:   whiteScore(isWinnerWhite, "1", "0"),
 				IpponBlue:    blueScore(isWinnerWhite, "1", "0"),
 				PenaltyWhite: whiteScore(isWinnerWhite, "1", "3"),
@@ -128,7 +128,7 @@ func generateWinTypes(isWinnerWhite bool) []map[winType]judobase.Contest {
 			},
 		},
 		{
-			winBy3Shidos: {
+			winByMaxShidos: {
 				IpponWhite:   whiteScore(isWinnerWhite, "1", "0"),
 				IpponBlue:    blueScore(isWinnerWhite, "1", "0"),
 				PenaltyWhite: whiteScore(isWinnerWhite, "2", "3"),

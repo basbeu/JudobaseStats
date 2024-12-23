@@ -120,7 +120,7 @@ func reportRoundStats(out io.Writer, round string, winRecords []WinRecord) {
 		fmt.Fprintf(out, "# wins by waza-ari: %d %s\n", winsByTypes[winByWaza], formatPercentage(winsByTypes[winByWaza], len(winRecords)))
 		fmt.Fprintf(out, "# wins by yuko: %d %s\n", winsByTypes[winByYuko], formatPercentage(winsByTypes[winByYuko], len(winRecords)))
 		fmt.Fprintf(out, "# wins by shido: %d %s\n", winsByTypes[winByShido], formatPercentage(winsByTypes[winByShido], len(winRecords)))
-		fmt.Fprintf(out, "# wins by 3 shidos: %d %s\n", winsByTypes[winBy3Shidos], formatPercentage(winsByTypes[winBy3Shidos], len(winRecords)))
+		fmt.Fprintf(out, "# wins by max shidos: %d %s\n", winsByTypes[winByMaxShidos], formatPercentage(winsByTypes[winByMaxShidos], len(winRecords)))
 		fmt.Fprintf(out, "# wins by direct hansoku-make: %d %s\n", winsByTypes[winByHansokuMake], formatPercentage(winsByTypes[winByHansokuMake], len(winRecords)))
 		fmt.Fprintf(out, "# unknown win types: %d %s\n", winsByTypes[winUnknown], formatPercentage(winsByTypes[winUnknown], len(winRecords)))
 		fmt.Fprintln(out, "------------------------------------")
@@ -188,7 +188,7 @@ func reportRoundStatsArray(competitionName string, categoryName string, round st
 		fmt.Sprint(winsByTypes[winByWaza]),
 		fmt.Sprint(winsByTypes[winByYuko]),
 		fmt.Sprint(winsByTypes[winByShido]),
-		fmt.Sprint(winsByTypes[winBy3Shidos]),
+		fmt.Sprint(winsByTypes[winByMaxShidos]),
 		fmt.Sprint(winsByTypes[winByHansokuMake]),
 		fmt.Sprint(winsByTypes[winUnknown]),
 		fmt.Sprint(winsByFinishMode[regularTime]),

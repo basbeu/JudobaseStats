@@ -66,7 +66,7 @@ func main() {
 		"Waza":        {"# Wins by waza-ari"},
 		"Yuko":        {"# Wins by yuko"},
 		"Shido":       {"# Wins by shido"},
-		"Shidos":      {"# Wins by 3 shidos"},
+		"Shidos":      {"# Wins by max shidos"},
 		"Hansokumake": {"# Wins by direct hansokumake"},
 		"Unknown":     {"# Unknown win type"},
 		"Regular":     {"# Wins in regular time"},

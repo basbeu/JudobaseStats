@@ -1,6 +1,8 @@
 package analyser
 
 import (
+	"strconv"
+
 	"github.com/basbeu/JudobaseStats/internal/judobase"
 )
 
@@ -10,7 +12,7 @@ const (
 	winByIppon winType = iota
 	winByWaza
 	winByYuko
-	winBy3Shidos
+	winByMaxShidos
 	winByHansokuMake
 	winByShido
 	winUnknown
@@ -22,8 +24,8 @@ func (t winType) string() string {
 		return "Ippon"
 	case winByWaza:
 		return "Waza-Ari"
-	case winBy3Shidos:
-		return "3 shidos"
+	case winByMaxShidos:
+		return "max shidos"
 	case winByShido:
 		return "win by shido"
 	case winByHansokuMake:
@@ -36,8 +38,8 @@ func (t winType) string() string {
 func parseWinType(contest judobase.Contest) winType {
 	if isWinnerWhite(contest) {
 		if (contest.IpponWhite != nil && *contest.IpponWhite == "1") || (contest.WazaWhite != nil && *contest.WazaWhite == "2") {
-			if contest.PenaltyBlue != nil && *contest.PenaltyBlue == "3" {
-				return winBy3Shidos
+			if contest.PenaltyBlue != nil && *contest.PenaltyBlue == getMaxShidos(contest) {
+				return winByMaxShidos
 			} else if contest.HSKBlue != nil && *contest.HSKBlue == "1" {
 				return winByHansokuMake
 			}
@@ -51,8 +53,8 @@ func parseWinType(contest judobase.Contest) winType {
 		}
 	} else if isWinnerBlue(contest) {
 		if (contest.IpponBlue != nil && *contest.IpponBlue == "1") || (contest.WazaBlue != nil && *contest.WazaBlue == "2") {
-			if contest.PenaltyWhite != nil && *contest.PenaltyWhite == "3" {
-				return winBy3Shidos
+			if contest.PenaltyWhite != nil && *contest.PenaltyWhite == getMaxShidos(contest) {
+				return winByMaxShidos
 			} else if contest.HSKWhite != nil && *contest.HSKWhite == "1" {
 				return winByHansokuMake
 			}
@@ -74,4 +76,16 @@ func isWinnerWhite(contest judobase.Contest) bool {
 
 func isWinnerBlue(contest judobase.Contest) bool {
 	return contest.IDWinner != nil && contest.IDPersonBlue != nil && *contest.IDPersonBlue == *contest.IDWinner
+}
+
+func getMaxShidos(contest judobase.Contest) string {
+	if contest.CompYear != nil {
+		y, err := strconv.Atoi(*contest.CompYear)
+		if err == nil {
+			if y <= 2016 {
+				return "4"
+			}
+		}
+	}
+	return "3"
 }
