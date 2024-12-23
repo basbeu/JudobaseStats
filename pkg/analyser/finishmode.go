@@ -1,6 +1,12 @@
 package analyser
 
-import "github.com/basbeu/JudobaseStats/internal/judobase"
+import (
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/basbeu/JudobaseStats/internal/judobase"
+)
 
 type finishMode bool
 
@@ -17,5 +23,29 @@ func (g finishMode) string() string {
 }
 
 func parseFinishMode(contest judobase.Contest) finishMode {
-	return contest.GoldenScore != nil && *contest.GoldenScore == "1"
+	if contest.Duration != nil && contest.CompYear != nil {
+		d, err := time.ParseDuration(strings.Replace(strings.Replace(*contest.Duration, ":", "h", 1), ":", "m", 1) + "s")
+		if err == nil {
+			return int(d.Seconds()) > getFightDuration(contest)
+		}
+	}
+
+	if contest.GoldenScore != nil {
+		return *contest.GoldenScore == "1"
+	}
+
+	return false
+}
+
+func getFightDuration(contest judobase.Contest) int {
+	if contest.CompYear != nil {
+		y, err := strconv.Atoi(*contest.CompYear)
+		if err == nil {
+			if y <= 2016 && parseGender(contest) == male {
+				return 300
+			}
+		}
+	}
+
+	return 240
 }
